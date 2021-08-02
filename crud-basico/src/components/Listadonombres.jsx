@@ -14,6 +14,11 @@ export const Listadonombres = () => {
     setListaNombres([...listaNombres, nuevoNombre]);
   };
 
+  const deleteNombe = (id) => {
+    const nuevoArray = listaNombres.filter((item) => item.id !== id);
+    setListaNombres(nuevoArray);
+  };
+
   return (
     <div className="container">
       <h1>Aplicación Crud Básico</h1>
@@ -24,6 +29,14 @@ export const Listadonombres = () => {
             {listaNombres.map((item) => (
               <li key="{item.id}" className="list-group-item">
                 {item.tituloNombre}
+                <button
+                  className="btn btn-danger float-end"
+                  onClick={() => {
+                    deleteNombe(item.id);
+                  }}
+                >
+                  Eliminar
+                </button>
               </li>
             ))}
           </ul>
@@ -38,7 +51,7 @@ export const Listadonombres = () => {
               className="form-control mb-3"
               type="text"
               placeholder="Introduzca el nombre"
-              value= {nombre}
+              value={nombre}
             />
             <input
               className="btn btn-info w-100"
