@@ -1,19 +1,27 @@
 import React, { useState } from "react";
 import uniqid from "uniqid";
 
- export const Listadonombres = () => {
+export const Listadonombres = () => {
   const [nombre, setNombre] = useState("");
   const [listaNombres, setListaNombres] = useState([]);
   const [modoEdicion, setModoEdicion] = useState(false);
-  const [id, setId] = useState ('')
+  const [id, setId] = useState("");
+  const [error, setError] = useState(null);
 
   const addNombre = (e) => {
     e.preventDefault();
+    if (!nombre.trim()) {
+      console.log("el campo nombre es vacio");
+      setError("el campo nombre es vacio");
+      return; //vuelve a la funcion padre
+    }
     const nuevoNombre = {
       id: uniqid(),
       tituloNombre: nombre,
     };
     setListaNombres([...listaNombres, nuevoNombre]);
+    setNombre("");
+    setError(null);
   };
 
   const deleteNombre = (id) => {
@@ -24,13 +32,23 @@ import uniqid from "uniqid";
   const editar = (item) => {
     setModoEdicion(true);
     setNombre(item.tituloNombre);
-    setId (item.id)
+    setId(item.id);
   };
 
   const editarNombre = (e) => {
-    e.preventDefault()
-   const nuevoArray = listaNombres.map((item) => item.id === id ? {id:item.id, tituloNombre: nombre} : item)
-   setListaNombres(nuevoArray)
+    e.preventDefault();
+    if (!nombre.trim()) {
+      console.log("el campo nombre es vacio");
+      setError("el campo nombre es vacio");
+      return; //vuelve a la funcion padre
+    }
+    const nuevoArray = listaNombres.map((item) =>
+      item.id === id ? { id: item.id, tituloNombre: nombre } : item
+    );
+    setListaNombres(nuevoArray);
+    setModoEdicion(false);
+    setNombre("");
+    setError(null)
   };
 
   return (
@@ -65,7 +83,10 @@ import uniqid from "uniqid";
         </div>
         <div className="col">
           <h2>Formulario de Nombres</h2>
-          <form onSubmit={modoEdicion ? editarNombre : addNombre} className="form-group">
+          <form
+            onSubmit={modoEdicion ? editarNombre : addNombre}
+            className="form-group"
+          >
             <input
               onChange={(e) => {
                 setNombre(e.target.value);
@@ -76,11 +97,17 @@ import uniqid from "uniqid";
               value={nombre}
             />
             <input
-              className="btn btn-info w-100"
+              className="btn btn-info w-100 mb-3"
               type="submit"
               value={modoEdicion ? "Editar Nombre" : "Registrar Nombre"}
             />
           </form>
+          {
+          error != null ? (
+            <div className="alert alert-danger"> {error} </div>
+          ) : (
+            <div></div>
+          )}
         </div>
       </div>
     </div>
